@@ -1,0 +1,46 @@
+group 'com.github.twinra'
+description 'Borrow manager'
+
+apply plugin: 'scala'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile "org.scala-lang:scala-library:$scalaVersion"
+
+    compile "ch.qos.logback:logback-classic:$logbackVersion"
+    compile "com.typesafe.scala-logging:scala-logging_2.11:$scalaLoggingVersion"
+    compile "com.typesafe:config:$typesafeConfigVersion"
+    compile "org.json4s:json4s-jackson_2.11:$json4sVersion"
+
+    // web scalatra + jetty
+    compile "org.scalatra:scalatra_2.11:$scalatraVersion"
+    compile "org.scalatra:scalatra-scalate_2.11:$scalatraVersion"
+    compile "org.scalatra:scalatra-json_2.11:$scalatraVersion"
+    compile "org.eclipse.jetty:jetty-server:$jettyVersion"
+    compile "org.eclipse.jetty:jetty-webapp:$jettyVersion"
+
+    // database providers
+    compile "com.h2database:h2:$h2Version"
+    compile "mysql:mysql-connector-java:$mysqlVersion"
+
+    // sql
+    compile "org.scalikejdbc:scalikejdbc_2.11:$scalikeVersion"
+    compile "org.scalikejdbc:scalikejdbc-config_2.11:$scalikeVersion"
+
+    testCompile "org.scalatest:scalatest_2.11:$scalatestVersion"
+
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
