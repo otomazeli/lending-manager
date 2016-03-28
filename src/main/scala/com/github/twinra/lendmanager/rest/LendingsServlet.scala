@@ -2,7 +2,7 @@ package com.github.twinra.lendmanager.rest
 
 import java.time.LocalDate
 
-import com.github.twinra.lendmanager.repo.Repository
+import com.github.twinra.lendmanager.repo.Storage
 import com.github.twinra.utils.json.JLocalDateSerializer
 import com.typesafe.scalalogging.LazyLogging
 import org.json4s.{DefaultFormats, Formats}
@@ -12,7 +12,7 @@ import org.scalatra.json.JacksonJsonSupport
 import scala.util.{Failure, Success, Try}
 
 private case class LendingMessage(itemId: Long, personId: Long, date: LocalDate)
-class LendingsServlet(implicit val repo: Repository) extends ScalatraServlet with LazyLogging with JacksonJsonSupport {
+class LendingsServlet(implicit val repo: Storage) extends ScalatraServlet with LazyLogging with JacksonJsonSupport {
   protected implicit lazy val jsonFormats: Formats = DefaultFormats + JLocalDateSerializer
 
   before() {

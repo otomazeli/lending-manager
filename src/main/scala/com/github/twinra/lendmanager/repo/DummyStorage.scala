@@ -6,7 +6,7 @@ import com.github.twinra.lendmanager.domain.{Item, Person, Lending}
 
 import scala.collection.mutable.ArrayBuffer
 
-class DummyRepository extends Repository {
+class DummyStorage extends Storage {
 
   override def init(): Unit = {
     addPeople(Person("Vasya"), Person("Petya"), Person("Kolya"))

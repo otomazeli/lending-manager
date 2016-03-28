@@ -1,13 +1,13 @@
 package com.github.twinra.lendmanager.rest
 
 import com.github.twinra.lendmanager.domain.Person
-import com.github.twinra.lendmanager.repo.Repository
+import com.github.twinra.lendmanager.repo.Storage
 import com.typesafe.scalalogging.LazyLogging
 import org.json4s.{Formats, DefaultFormats}
 import org.scalatra.ScalatraServlet
 import org.scalatra.json._
 
-class PeopleServlet(implicit val repo: Repository) extends ScalatraServlet with LazyLogging with JacksonJsonSupport {
+class PeopleServlet(implicit val repo: Storage) extends ScalatraServlet with LazyLogging with JacksonJsonSupport {
   protected implicit lazy val jsonFormats: Formats = DefaultFormats
 
   before() {

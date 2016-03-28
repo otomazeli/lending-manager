@@ -5,7 +5,7 @@ import java.time.LocalDate
 import com.github.twinra.lendmanager.domain.{Lending, Item, Person}
 
 //TODO: split it into poor and reach parts(cake pattern)
-trait Repository {
+trait Storage {
   def init(): Unit
 
   def people: Seq[Person]
