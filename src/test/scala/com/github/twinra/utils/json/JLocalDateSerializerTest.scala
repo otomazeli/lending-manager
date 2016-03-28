@@ -8,7 +8,7 @@ import org.json4s.jackson.JsonMethods._
 import org.scalatest.{FlatSpec, Matchers}
 
 
-class JLocalDateSerializerSpec extends FlatSpec with Matchers {
+class JLocalDateSerializerTest extends FlatSpec with Matchers {
 
   private case class Borrow(itemId: Long, personId: Long, date: LocalDate)
   implicit lazy val formats = DefaultFormats + JLocalDateSerializer

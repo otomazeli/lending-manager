@@ -51,16 +51,16 @@ class LendingRepository extends CRUDRepository[Lending, Long] {
   }
 
 
-  override def drop(): Unit = DB localTx { implicit session => sql"drop table if exists ${ItemDAO.table}".execute().apply() }
+  override def drop(): Unit = DB localTx { implicit session => sql"drop table if exists ${LendingDAO.table}".execute().apply() }
 
   override def create(): Unit = DB localTx { implicit session =>
     sql"""create table if not exists ${LendingDAO.table} (
         id bigint auto_increment not null primary key,
-        itemId bigint not null,
-        personId bigint not null,
+        item_id bigint not null,
+        person_id bigint not null,
         date DATE not null,
-        foreign key (itemId) references ${ItemDAO.table}(id),
-        foreign key (personId) references ${PersonDAO.table}(id)
+        foreign key (item_id) references ${ItemDAO.table}(id),
+        foreign key (person_id) references ${PersonDAO.table}(id)
     )""".execute().apply()
   }
 }
