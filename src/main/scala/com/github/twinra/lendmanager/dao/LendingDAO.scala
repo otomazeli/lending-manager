@@ -1,4 +1,4 @@
-package com.github.twinra.lendmanager.repo.dao
+package com.github.twinra.lendmanager.dao
 
 import java.time.LocalDate
 
@@ -21,6 +21,7 @@ object LendingDAO extends SQLSyntaxSupport[LendingDAO] {
   override val tableName = "Lendings"
 
   def apply(l: LendingSP, i: ItemSP, p: PersonSP)(rs: WrappedResultSet): LendingDAO = apply(l.resultName, i.resultName, p.resultName)(rs)
+
   def apply(l: LendingRN, i: ItemRN, p: PersonRN)(rs: WrappedResultSet): LendingDAO = {
     LendingDAO(
       rs.long(l.id),

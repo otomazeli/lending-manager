@@ -1,4 +1,4 @@
-package com.github.twinra.lendmanager.repo.dao
+package com.github.twinra.lendmanager.dao
 
 import com.github.twinra.lendmanager.domain.Lending
 import com.github.twinra.lendmanager.repo.CRUDRepository
@@ -30,7 +30,9 @@ class LendingRepository extends CRUDRepository[Lending, Long] {
   override def update(id: Long, entity: Lending): Unit = throw new UnsupportedOperationException()
 
   override def delete(id: Long): Unit = DB localTx { implicit session =>
-    withSQL { QueryDSL.delete.from(LendingDAO).where.eq(col.id, id) }.update().apply()
+    withSQL {
+      QueryDSL.delete.from(LendingDAO).where.eq(col.id, id)
+    }.update().apply()
   }
 
   override def readAll(): Seq[Lending] = DB readOnly { implicit session =>
@@ -51,9 +53,9 @@ class LendingRepository extends CRUDRepository[Lending, Long] {
   }
 
 
-  override def drop(): Unit = DB localTx { implicit session => sql"drop table if exists ${LendingDAO.table}".execute().apply() }
+  override def destroy(): Unit = DB localTx { implicit session => sql"drop table if exists ${LendingDAO.table}".execute().apply() }
 
-  override def create(): Unit = DB localTx { implicit session =>
+  override def init(): Unit = DB localTx { implicit session =>
     sql"""create table if not exists ${LendingDAO.table} (
         id bigint auto_increment not null primary key,
         item_id bigint not null,

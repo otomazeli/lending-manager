@@ -2,7 +2,9 @@ package com.github.twinra.lendmanager.rest
 
 import java.time.LocalDate
 
-import com.github.twinra.lendmanager.repo.Storage
+import com.github.twinra.lendmanager.dao.LendingRepository
+import com.github.twinra.lendmanager.domain.Lending
+import com.github.twinra.lendmanager.repo.{ItemRepository, PersonRepository}
 import com.github.twinra.utils.json.JLocalDateSerializer
 import com.typesafe.scalalogging.LazyLogging
 import org.json4s.{DefaultFormats, Formats}
@@ -12,7 +14,10 @@ import org.scalatra.json.JacksonJsonSupport
 import scala.util.{Failure, Success, Try}
 
 private case class LendingMessage(itemId: Long, personId: Long, date: LocalDate)
-class LendingsServlet(implicit val repo: Storage) extends ScalatraServlet with LazyLogging with JacksonJsonSupport {
+
+class LendingsServlet(implicit repo: LendingRepository,
+                      itemsRepo: ItemRepository,
+                      peopleRepo: PersonRepository) extends ScalatraServlet with LazyLogging with JacksonJsonSupport {
   protected implicit lazy val jsonFormats: Formats = DefaultFormats + JLocalDateSerializer
 
   before() {
@@ -20,27 +25,26 @@ class LendingsServlet(implicit val repo: Storage) extends ScalatraServlet with L
   }
 
   get("/") {
-    repo.lendings
+    repo.readAll()
   }
 
   get("/:id") {
-    repo.lendings.find(_.id.get == params("id").toLong).orElse(halt(404))
+    repo.read(params("id").toLong).getOrElse(halt(404))
   }
 
   post("/") {
-    val borrowRequest = Try(parsedBody.extract[LendingMessage]) match {
+    val lendingRequest = Try(parsedBody.extract[LendingMessage]) match {
       case Success(b) => b
       case Failure(ex) =>
         log("Failed extract lending", ex)
         halt(400)
     }
-    repo.lend(
-      repo.personById(borrowRequest.personId).getOrElse(halt(404)),
-      repo.itemById(borrowRequest.itemId).getOrElse(halt(404)),
-      borrowRequest.date)
+    val item = itemsRepo.read(lendingRequest.itemId).getOrElse(halt(404))
+    val person = peopleRepo.read(lendingRequest.personId).getOrElse(halt(404))
+    repo.add(Lending(item, person, lendingRequest.date))
   }
 
   delete("/:id") {
-    ??? //TODO
+    repo.delete(params("id").toLong)
   }
 }

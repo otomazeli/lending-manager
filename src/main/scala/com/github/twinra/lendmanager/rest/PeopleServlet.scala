@@ -1,13 +1,13 @@
 package com.github.twinra.lendmanager.rest
 
 import com.github.twinra.lendmanager.domain.Person
-import com.github.twinra.lendmanager.repo.Storage
+import com.github.twinra.lendmanager.repo.PersonRepository
 import com.typesafe.scalalogging.LazyLogging
-import org.json4s.{Formats, DefaultFormats}
+import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.ScalatraServlet
 import org.scalatra.json._
 
-class PeopleServlet(implicit val repo: Storage) extends ScalatraServlet with LazyLogging with JacksonJsonSupport {
+class PeopleServlet(implicit val repo: PersonRepository) extends ScalatraServlet with LazyLogging with JacksonJsonSupport {
   protected implicit lazy val jsonFormats: Formats = DefaultFormats
 
   before() {
@@ -15,23 +15,24 @@ class PeopleServlet(implicit val repo: Storage) extends ScalatraServlet with Laz
   }
 
   get("/") {
-    repo.people
+    repo.readAll()
   }
 
   get("/:id") {
-    repo.people.find(_.id.get == params("id").toLong).getOrElse(halt(404))
+    repo.read(params("id").toLong).getOrElse(halt(404))
   }
 
   post("/") {
     val person = parsedBody.extract[Person]
-    repo.addPerson(person.copy(id = None))
+    repo.add(person)
   }
 
   put("/:id") {
-    ??? //TODO
+    val person = parsedBody.extract[Person]
+    repo.update(params("id").toLong, person)
   }
 
   delete("/:id") {
-    ??? //TODO
+    repo.delete(params("id").toLong)
   }
 }

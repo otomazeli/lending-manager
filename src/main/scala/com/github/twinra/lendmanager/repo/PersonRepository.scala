@@ -1,7 +1,7 @@
 package com.github.twinra.lendmanager.repo
 
+import com.github.twinra.lendmanager.dao.PersonDAO
 import com.github.twinra.lendmanager.domain.Person
-import com.github.twinra.lendmanager.repo.dao.PersonDAO
 import scalikejdbc._
 
 class PersonRepository extends CRUDRepository[Person, Long] {
@@ -39,9 +39,9 @@ class PersonRepository extends CRUDRepository[Person, Long] {
     }.map(PersonDAO(itm)).single().apply().map(_.person)
   }
 
-  override def drop(): Unit = DB localTx { implicit session => sql"drop table if exists ${PersonDAO.table}".execute().apply() }
+  override def destroy(): Unit = DB localTx { implicit session => sql"drop table if exists ${PersonDAO.table}".execute().apply() }
 
-  override def create(): Unit = DB localTx { implicit session =>
+  override def init(): Unit = DB localTx { implicit session =>
     sql"""create table if not exists ${PersonDAO.table} (
          id bigint auto_increment not null primary key,
          name varchar(64))"""
